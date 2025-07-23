@@ -1,0 +1,14 @@
+2025-07-11 15:45:02,325 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-07-11 15:45:02,325 - INFO - [33mPress CTRL+C to quit[0m
+2025-07-11 15:45:06,001 - INFO - 127.0.0.1 - - [11/Jul/2025 15:45:06] "GET / HTTP/1.1" 200 -
+2025-07-11 15:45:06,666 - INFO - 127.0.0.1 - - [11/Jul/2025 15:45:06] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-07-11 15:45:10,644 - INFO - 127.0.0.1 - - [11/Jul/2025 15:45:10] "GET /get_network_interfaces HTTP/1.1" 200 -
+2025-07-11 15:45:23,803 - INFO - ÒÑÑ¡Ôñ¼àÌý½Ó¿Ú: WLAN (MAC: 90:e8:68:06:93:83)
+2025-07-11 15:45:23,803 - INFO - 127.0.0.1 - - [11/Jul/2025 15:45:23] "POST /start_capture HTTP/1.1" 200 -
+2025-07-11 15:45:30,054 - INFO - 127.0.0.1 - - [11/Jul/2025 15:45:30] "GET /get_captured_packets HTTP/1.1" 200 -
+2025-07-11 15:45:30,766 - INFO - 127.0.0.1 - - [11/Jul/2025 15:45:30] "GET /get_captured_packets HTTP/1.1" 200 -
+2025-07-11 15:45:31,267 - INFO - 127.0.0.1 - - [11/Jul/2025 15:45:31] "GET /get_captured_packets HTTP/1.1" 200 -
+2025-07-11 15:47:05,822 - INFO - 127.0.0.1 - - [11/Jul/2025 15:47:05] "GET /get_captured_packets HTTP/1.1" 200 -
+2025-07-11 15:47:17,747 - INFO - 127.0.0.1 - - [11/Jul/2025 15:47:17] "GET /get_captured_packets HTTP/1.1" 200 -
+2025-07-11 15:48:12,685 - INFO - ÊÕµ½Í£Ö¹ÐÅºÅ£¬ÕýÔÚ¹Ø±Õ...

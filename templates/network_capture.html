@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <title>网络接口和数据包捕获</title>
+    <style>
+        /* 黑客风格背景动画 */
+        body {
+            color: #0f0;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, #000 0%, #001 25%, #010 50%, #001 75%, #000 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 按钮样式 */
+        .btn {
+            background: linear-gradient(45deg, #0f0, #0ff);
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn i {
+            margin-right: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover i {
+            transform: rotate(360deg) scale(1.2);
+        }
+
+        /* 文本框样式 */
+        textarea {
+            background: rgba(0, 0, 0, 0.7);
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            resize: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            transition: border-color 0.3s;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% {
+                border-color: #0f0;
+                box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            }
+            100% {
+                border-color: #0ff;
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        textarea:focus {
+            border-color: #0ff;
+            outline: none;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            border: 2px solid #0f0;
+            transition: box-shadow 0.3s, border-color 0.3s;
+            animation: card-flicker 2s infinite alternate;
+        }
+
+        @keyframes card-flicker {
+            0% {
+                border-color: #0f0;
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            }
+            100% {
+                border-color: #0ff;
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        .card:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+            border-color: #0ff;
+        }
+
+        /* DDoS指示灯样式 */
+        #ddos_indicator {
+            transition: background-color 0.5s ease;
+        }
+        .status-safe {
+            background-color: #0f0 !important;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+        }
+        .status-warning {
+            background-color: #ff0 !important;
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+        }
+
+        /* 标题样式 */
+        h1,
+        h2,
+        h3 {
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            color: #0f0;
+            animation: title-flicker 1.5s infinite alternate;
+        }
+
+        @keyframes title-flicker {
+            0% {
+                color: #0f0;
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            }
+            100% {
+                color: #0ff;
+                text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        /* 加载进度条样式 */
+        .loading-progress {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #0f0;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: loading-pulse 1s infinite;
+        }
+
+        .loading-progress-bar {
+            height: 20px;
+            background: #0f0;
+            width: 0%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+        }
+
+        @keyframes loading-pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            }
+        }
+
+        /* 网络接口选择样式 */
+        .interface-card {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interface-card:hover {
+            background: rgba(0, 255, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .interface-card.selected {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #0ff;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+</head>
+
+<body class="p-4">
+    <div class="loading-progress" id="loadingProgress">
+        <h3>正在计算统计数据...</h3>
+        <div class="loading-progress-bar" id="progressBar"></div>
+        <p id="progressText">准备中...</p>
+    </div>
+
+    <!-- DDOS攻击数据包弹窗 -->
+    <div id="ddos_modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div class="bg-black border-2 border-green-500 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold">DDOS攻击检测</h3>
+          <button id="close_ddos_modal" class="text-green-500 hover:text-green-400" title="关闭DDOS攻击检测弹窗">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+        <div class="overflow-y-auto flex-grow">
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse border border-green-500">
+              <thead>
+                <tr class="bg-black text-green-500">
+                  <th class="p-2 border border-green-500">时间戳</th>
+                  <th class="p-2 border border-green-500">模型</th>
+                  <th class="p-2 border border-green-500">时间戳密度</th>
+                  <th class="p-2 border border-green-500">流量速率</th>
+                  <th class="p-2 border border-green-500">重复率</th>
+                  <th class="p-2 border border-green-500">源IP多样性</th>
+                  <th class="p-2 border border-green-500">流对密度</th>
+                  <th class="p-2 border border-green-500">时间间隔波动性</th>
+                  <th class="p-2 border border-green-500">预测结果</th>
+                </tr>
+              </thead>
+              <tbody id="model_predictions_table_body" class="text-green-400">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+    // 获取模型预测数据并更新表格
+    async function updateModelPredictions() {
+      try {
+        const response = await fetch('/get_model_predictions');
+        const predictions = await response.json();
+        const tableBody = document.getElementById('model_predictions_table_body');
+        tableBody.innerHTML = '';
+        // 检查是否所有预测结果都是1
+        const allOnes = predictions.every(pred => pred.prediction == 1.0);
+
+        predictions.forEach(pred => {
+          const row = document.createElement('tr');
+          // 根据所有预测是否为1设置行颜色
+          row.className = allOnes ? 'bg-red-900 bg-opacity-30' : 'bg-green-900 bg-opacity-30';
+          row.innerHTML = `
+            <td class="p-2 border border-green-500">${pred.timestamp}</td>
+            <td class="p-2 border border-green-500">${pred.model}</td>
+            <td class="p-2 border border-green-500">${pred.features.timestamp_density.toFixed(4)}</td>
+            <td class="p-2 border border-green-500">${pred.features.traffic_rate.toFixed(2)}</td>
+            <td class="p-2 border border-green-500">${pred.features.duplicate_ratio.toFixed(4)}</td>
+            <td class="p-2 border border-green-500">${pred.features.src_ip_diversity.toFixed(4)}</td>
+            <td class="p-2 border border-green-500">${pred.features.flow_pair_density.toFixed(4)}</td>
+            <td class="p-2 border border-green-500">${pred.features.time_delta_std.toFixed(6)}</td>
+            <td class="p-2 border border-green-500">${pred.prediction}</td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('获取模型预测数据失败:', error);
+      }
+    }
+
+    // 页面加载时和每隔3秒更新一次数据
+    window.addEventListener('load', updateModelPredictions);
+    setInterval(updateModelPredictions, 3000);
+    </script>
+    <div id="ddos_modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div class="bg-black border-2 border-green-500 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold">DDOS攻击检测</h3>
+          <button id="close_ddos_modal" class="text-green-500 hover:text-green-400" title="关闭DDOS攻击检测弹窗">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+        <div class="overflow-y-auto flex-grow">
+          <div class="overflow-x-auto">
+            <table class="w-full border-collapse border border-green-500">
+              <thead>
+                <tr class="bg-black text-green-500">
+                  <th class="p-2 border border-green-500">协议</th>
+                  <th class="p-2 border border-green-500">源IP</th>
+                  <th class="p-2 border border-green-500">目的IP</th>
+                  <th class="p-2 border border-green-500">时间</th>
+                  <th class="p-2 border border-green-500">大小</th>
+                  <th class="p-2 border border-green-500">状态</th>
+                </tr>
+              </thead>
+              <tbody id="ddos_packet_table_body" class="text-green-400">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 加载进度条 -->
+    <div class="loading-progress" id="loading-progress">
+        <div class="loading-progress-bar" id="loading-progress-bar"></div>
+    </div>
+    <h1 class="text-4xl font-bold mb-4 text-center">网络接口和数据包捕获</h1>
+<div id="ddos_control" class="card mb-4 w-64 mx-auto cursor-pointer flex items-center justify-between p-4">
+  <span class="text-xl font-bold">DDOS攻击监控</span>
+  <span id="ddos_indicator" class="w-6 h-6 rounded-full bg-green-500 animate-pulse"></span>
+  <script>
+  setInterval(async () => {
+    try {
+      const response = await fetch('/get_attack_status');
+      const data = await response.json();
+      const indicator = document.getElementById('ddos_indicator');
+      if (data.under_attack) {
+        indicator.classList.remove('bg-green-500');
+        indicator.classList.add('bg-red-500');
+      } else {
+        indicator.classList.remove('bg-red-500');
+        indicator.classList.add('bg-green-500');
+      }
+    } catch (error) {
+      console.error('Failed to check attack status:', error);
+    }
+  }, 1000); // 每秒检查一次
+  </script>
+</div>
+    <div class="flex space-x-4 mb-6">
+
+        <div class="w-1/2">
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">网络接口选择</h2>
+                <select id="interface_select" class="w-full bg-black border-2 border-green-500 text-green-500 p-2 rounded mb-4" title="选择网络接口">
+                    <option value="">请选择网络接口...</option>
+                </select>
+                <div id="network_interfaces" class="mb-2">
+                    <p>正在获取网络接口列表...</p>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="btn_start_capture" class="btn">
+                        <i class="fa-solid fa-play"></i>开始捕获数据包
+                    </button>
+                    <input type="text" id="filter_input" class="bg-black border-2 border-green-500 text-green-500 p-2 rounded w-64 ml-2" placeholder="筛选字符串（支持多条件逗号分隔，如sport:80,dport:443,tcp）">
+                    <button id="btn_stop_capture" class="btn">
+                        <i class="fa-solid fa-stop"></i>停止捕获数据包
+                    </button>
+                </div>
+                <button id="btn_back" class="btn mt-2">
+                    <i class="fa-solid fa-arrow-left"></i>返回主页面
+                </button>
+            </div>
+        </div>
+        <div class="w-1/2">
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">捕获的数据包</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse border border-green-500">
+                        <thead>
+                            <tr class="bg-black text-green-500">
+                                <th class="p-2 border border-green-500">协议</th>
+                                <th class="p-2 border border-green-500">源IP</th>
+                                <th class="p-2 border border-green-500">目的IP</th>
+                                <th class="p-2 border border-green-500">时间</th>
+                                <th class="p-2 border border-green-500">大小</th>
+                            </tr>
+                        </thead>
+                        <tbody id="packet_table_body" class="text-green-400">
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 弹窗 -->
+                <div id="packet_modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4">
+                    <div class="bg-black border-2 border-green-500 rounded-lg p-6 max-w-2xl w-full">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold">数据包详情</h3>
+                            <button id="close_modal" class="text-green-500 hover:text-green-400" title="关闭数据包详情弹窗">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                        <pre id="packet_details" class="overflow-auto max-h-96 text-green-400"></pre>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        let selectedInterfaceIndex = null;
+        let isFilterActive = false;
+
+        function showLoading() {
+            const loadingProgress = document.getElementById('loading-progress');
+            const loadingProgressBar = document.getElementById('loading-progress-bar');
+            loadingProgress.style.display = 'block';
+            loadingProgressBar.style.width = '0%';
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(interval);
+                } else {
+                    progress += Math.random() * 10;
+                    if (progress > 100) progress = 100;
+                    loadingProgressBar.style.width = progress + '%';
+                }
+            }, 200);
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-progress').style.display = 'none';
+        }
+
+        // 获取网络接口列表
+        async function fetchNetworkInterfaces() {
+            try {
+                showLoading();
+                const response = await fetch('/get_network_interfaces');
+                const data = await response.json();
+                hideLoading();
+                if (data.success) {
+                    renderNetworkInterfaces(data.interfaces);
+                } else {
+                    document.getElementById('network_interfaces').innerHTML = `<p>获取网络接口失败：${data.message}</p>`;
+                }
+            } catch (error) {
+                hideLoading();
+                document.getElementById('network_interfaces').innerHTML = `<p>获取网络接口时发生错误：${error.message}</p>`;
+            }
+        }
+
+        // 渲染网络接口列表
+        function renderNetworkInterfaces(interfaces) {
+            const select = document.getElementById('interface_select');
+            select.innerHTML = '<option value="">请选择网络接口...</option>';
+
+            interfaces.forEach((iface, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${iface.friendly_name} (${iface.name})`;
+                select.appendChild(option);
+            });
+        }
+
+        document.getElementById('interface_select').addEventListener('change', (e) => {
+            selectedInterfaceIndex = e.target.value ? parseInt(e.target.value) : null;
+        });
+
+        // 选择网络接口
+        function selectInterface(index) {
+            selectedInterfaceIndex = index;
+            const cards = document.querySelectorAll('.interface-card');
+            cards.forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('selected');
+                } else {
+                    card.classList.remove('selected');
+                }
+            });
+        }
+
+        // 开始捕获数据包
+        document.getElementById('btn_start_capture').addEventListener('click', async () => {
+            const filterString = document.getElementById('filter_input').value || '';
+            isFilterActive = filterString.trim() !== '';
+            if (selectedInterfaceIndex === null) {
+                alert('请先选择一个网络接口');
+                return;
+            }
+
+            showLoading();
+            const response = await fetch('/start_capture', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    interface_index: selectedInterfaceIndex,
+                    filter_string: filterString
+                })
+            });
+            const data = await response.json();
+            hideLoading();
+            alert(data.message);
+        });
+
+        // 应用筛选条件
+        // 实时筛选功能
+        document.getElementById('filter_input').addEventListener('input', async (e) => {
+            const filterString = e.target.value || '';
+            try {
+                const response = await fetch('/update_filter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        filter_string: filterString
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    refreshPackets(); // 立即刷新数据包
+                }
+            } catch (error) {
+                console.error('更新筛选条件失败:', error);
+            }
+        });
+
+        // 停止捕获数据包
+        document.getElementById('btn_stop_capture').addEventListener('click', async () => {
+            showLoading();
+            const response = await fetch('/stop_capture');
+            const data = await response.json();
+            hideLoading();
+            alert(data.message);
+        });
+
+        // 刷新捕获的数据包
+        async function refreshPackets() {
+            const response = await fetch('/get_captured_packets');
+            const data = await response.json();
+            if (data.success) {
+                updatePacketTable(data.packets);
+            } else {
+                alert(data.message);
+            }
+        }
+
+        // 设置每1秒自动刷新
+        setInterval(refreshPackets, 1000);
+
+        // 更新表格数据
+        function updatePacketTable(packets) {
+            const tbody = document.getElementById('packet_table_body');
+            const fragment = document.createDocumentFragment();
+
+            packets.forEach(packet => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-green-900 cursor-pointer';
+                row.innerHTML = `
+                    <td class="p-2 border border-green-500">${packet.type || 'HTTP'}</td>
+                    <td class="p-2 border border-green-500">${packet.src || 'N/A'}</td>
+                    <td class="p-2 border border-green-500">${packet.dst || 'N/A'}</td>
+                    <td class="p-2 border border-green-500">${new Date(packet.timestamp).toLocaleTimeString()}</td>
+                    <td class="p-2 border border-green-500">${packet.size} bytes</td>
+                `;
+                row.addEventListener('click', () => showPacketDetails(packet));
+                fragment.appendChild(row);
+            });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+        }
+
+        // 显示数据包详情弹窗
+        function showPacketDetails(packet) {
+            document.getElementById('packet_details').textContent = JSON.stringify(packet, null, 2);
+            document.getElementById('packet_modal').classList.remove('hidden');
+        }
+
+        // 关闭弹窗
+        document.getElementById('close_modal').addEventListener('click', () => {
+            document.getElementById('packet_modal').classList.add('hidden');
+        });
+
+        // 返回主页面
+document.getElementById('btn_back').addEventListener('click', () => {
+    window.location.href = '/';
+});
+
+        // 页面加载完成后获取网络接口并启动自动刷新
+        // DDOS攻击监控控件交互
+        document.getElementById('ddos_control').addEventListener('click', () => {
+            document.getElementById('ddos_modal').classList.remove('hidden');
+            fetchAttackPackets();
+        });
+
+        document.getElementById('close_ddos_modal').addEventListener('click', () => {
+            document.getElementById('ddos_modal').classList.add('hidden');
+        });
+
+        // 更新DDoS指示灯状态
+        // 获取攻击数据包并显示
+        async function fetchAttackPackets() {
+            try {
+                showLoading();
+                const response = await fetch('/get_attack_packets');
+                const data = await response.json();
+                hideLoading();
+                if (data.success) {
+                    const tbody = document.getElementById('ddos_packet_table_body');
+                    tbody.innerHTML = '';
+
+                    const attackPackets = data.packets.filter(packet => packet.attack_status);
+if (attackPackets.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="text-center p-4">未检测到攻击数据包</td></tr>';
+} else {
+    attackPackets.forEach(packet => {
+                        const row = document.createElement('tr');
+                        const isAttack = packet.attack_status || false; // 需要后端添加attack_status字段
+                        row.className = isAttack ? 'hover:bg-yellow-900 cursor-pointer bg-yellow-900/30' : 'hover:bg-green-900 cursor-pointer';
+                        row.innerHTML = `
+                            <td class="p-2 border border-green-500">${packet.type || 'HTTP'}</td>
+                            <td class="p-2 border border-green-500">${packet.src || 'N/A'}</td>
+                            <td class="p-2 border border-green-500">${packet.dst || 'N/A'}</td>
+                            <td class="p-2 border border-green-500">${new Date(packet.timestamp).toLocaleTimeString()}</td>
+                            <td class="p-2 border border-green-500">${packet.size} bytes</td>
+                            <td class="p-2 border border-green-500">${isAttack ? '<span class="text-yellow-500">疑似攻击</span>' : '<span class="text-green-500">正常</span>'}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                }
+                }
+            } catch (error) {
+                hideLoading();
+                console.error('获取攻击数据包失败:', error);
+            }
+        }
+
+        async function updateDdosIndicator() {
+            try {
+                const response = await fetch('/get_attack_status');
+                const data = await response.json();
+                const indicator = document.getElementById('ddos_indicator');
+                if (data.is_attack) {
+                    indicator.classList.remove('status-safe');
+                    indicator.classList.add('status-warning');
+                } else {
+                    indicator.classList.remove('status-warning');
+                    indicator.classList.add('status-safe');
+                }
+            } catch (error) {
+                console.error('获取攻击状态失败:', error);
+            }
+        }
+
+        window.onload = () => {
+            fetchNetworkInterfaces();
+            // 每2秒更新一次指示灯状态
+            setInterval(updateDdosIndicator, 2000);
+            // 立即更新一次
+            updateDdosIndicator();
+            // 数据包自动刷新
+            setInterval(async () => {
+                const response = await fetch(`/get_captured_packets?page=${currentPage}`);
+                const data = await response.json();
+                if (data.success) {
+                    updatePacketTable(data.packets);
+                }
+            }, 8000);
+        };
+    </script>
+
+</body>
+
+</html>

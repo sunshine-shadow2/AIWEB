@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <title>AI智能代码交互客户端</title>
+    <style>
+        /* 黑客风格背景动画 */
+        body {
+            color: #0f0;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(45deg, #000 0%, #001 25%, #010 50%, #001 75%, #000 100%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 按钮样式 */
+        .btn {
+            background: linear-gradient(45deg, #0f0, #0ff);
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn i {
+            margin-right: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover i {
+            transform: rotate(360deg) scale(1.2);
+        }
+
+        /* 文本框样式 */
+        textarea {
+            background: rgba(0, 0, 0, 0.7);
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 10px;
+            border-radius: 5px;
+            resize: none;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            transition: border-color 0.3s;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0% {
+                border-color: #0f0;
+                box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+            }
+            100% {
+                border-color: #0ff;
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        textarea:focus {
+            border-color: #0ff;
+            outline: none;
+        }
+
+        /* 行号样式 */
+        .line-numbers {
+            background: rgba(0, 0, 0, 0.7);
+            color: #888;
+            width: 30px;
+            text-align: right;
+            padding-right: 5px;
+            border-radius: 5px 0 0 5px;
+            border: 2px solid #0f0;
+            border-right: none;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        /* 卡片样式 */
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            border: 2px solid #0f0;
+            transition: box-shadow 0.3s, border-color 0.3s;
+            animation: card-flicker 2s infinite alternate;
+        }
+
+        @keyframes card-flicker {
+            0% {
+                border-color: #0f0;
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            }
+            100% {
+                border-color: #0ff;
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        .card:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+            border-color: #0ff;
+        }
+
+        /* 标题样式 */
+        h1,
+        h2,
+        h3 {
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            color: #0f0;
+            animation: title-flicker 1.5s infinite alternate;
+        }
+
+        @keyframes title-flicker {
+            0% {
+                color: #0f0;
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+            }
+            100% {
+                color: #0ff;
+                text-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+            }
+        }
+
+        /* 开机进度条样式 */
+        .boot-progress {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #0f0;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: loading-pulse 1s infinite;
+        }
+
+        .boot-progress-bar {
+            height: 20px;
+            background: #0f0;
+            width: 0%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+        }
+
+        /* 加载进度条样式 */
+        .loading-progress {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            background: rgba(0, 0, 0, 0.9);
+            color: #0f0;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            animation: loading-pulse 1s infinite;
+        }
+
+        .loading-progress-bar {
+            height: 20px;
+            background: #0f0;
+            width: 0%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
+        }
+
+        @keyframes loading-pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            }
+        }
+
+        /* 网络接口选择样式 */
+        .interface-card {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #0f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interface-card:hover {
+            background: rgba(0, 255, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .interface-card.selected {
+            background: rgba(0, 255, 255, 0.3);
+            border-color: #0ff;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+</head>
+
+<body class="p-4">
+    <!-- 开机进度条 -->
+    <div class="boot-progress" id="boot-progress">
+        <div class="boot-progress-bar" id="boot-progress-bar"></div>
+    </div>
+    <!-- 加载进度条 -->
+    <div class="loading-progress" id="loading-progress">
+        <div class="loading-progress-bar" id="loading-progress-bar"></div>
+    </div>
+    <h1 class="text-4xl font-bold mb-4 text-center">AI智能代码交互客户端</h1>
+    <div class="flex space-x-4">
+        <div class="w-1/3">
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">API配置</h2>
+                <label for="api_base" class="block mb-1">API地址：</label>
+                <input type="text" id="api_base" value="{{ api_base }}" class="block w-full mb-2 rounded-md">
+                <label for="model" class="block mb-1">模型名称：</label>
+                <input type="text" id="model" value="{{ model }}" class="block w-full rounded-md">
+                <button id="btn_save_config" class="btn">
+                    <i class="fa-solid fa-save"></i>保存配置
+                </button>
+            </div>
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">用户输入</h2>
+                <label for="user_input" class="block mb-1">用户输入内容：</label>
+                <textarea id="user_input" rows="6" class="block w-full" title="请输入用户请求内容" placeholder="请输入您的请求内容"></textarea>
+            </div>
+            <div class="flex space-x-2 mb-4">
+                <button id="btn_send" class="btn">
+                    <i class="fa-solid fa-paper-plane"></i>发送请求
+                </button>
+                <button id="btn_execute" class="btn">
+                    <i class="fa-solid fa-play"></i>执行代码
+                </button>
+                <button id="btn_auto_execute" class="btn">
+                    <i class="fa-solid fa-repeat"></i>自动执行循环
+                </button>
+                <!-- 新增暂停按钮 -->
+                <button id="btn_pause_auto_execute" class="btn">
+                    <i class="fa-solid fa-pause"></i>暂停自动执行
+                </button>
+                <button id="btn_save_operation_log" class="btn">
+                    <i class="fa-solid fa-file-code"></i>保存操作日志
+                </button>
+            </div>
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">执行结果</h2>
+                <label for="exec_result" class="block mb-1">执行结果内容：</label>
+                <textarea id="exec_result" rows="8" class="block w-full" readonly title="显示代码执行结果" placeholder="代码执行结果将显示在这里"></textarea>
+                <button id="btn_send_result" class="btn mt-2">
+                    <i class="fa-solid fa-share"></i>发送结果
+                </button>
+            </div>
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">字体样式选择</h2>
+                <select id="font_style_select" class="block w-full rounded-md" title="选择字体样式">
+                    <option value="'Courier New', monospace">Courier New</option>
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                </select>
+            </div>
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">文件列表</h2>
+                <select id="file_list" class="block w-full rounded-md" multiple title="文件列表选择框"></select>
+            </div>
+            <div class="flex space-x-2 mb-4">
+                <button id="btn_clear_context" class="btn">
+                    <i class="fa-solid fa-trash"></i>清空上下文
+                </button>
+                <button id="btn_save_context" class="btn">
+                    <i class="fa-solid fa-floppy-disk"></i>保存上下文
+                </button>
+                <button id="btn_load_context" class="btn">
+                    <i class="fa-solid fa-folder-open"></i>读取上下文
+                </button>
+                <button id="btn_get_files" class="btn">
+                    <i class="fa-solid fa-list"></i>获取文件列表
+                </button>
+            </div>
+            <button id="btn_network_capture" class="btn">
+                <i class="fa-solid fa-network-wired"></i>网络接口和数据包捕获
+            </button>
+        </div>
+        <div class="w-2/3">
+            <div class="card mb-4">
+                <h2 class="text-xl font-bold mb-2">AI响应（可编辑）</h2>
+                <div class="border border-gray-600 p-2 mb-2 rounded-md">
+                    <h3 class="text-md font-bold mb-1">提示信息</h3>
+                    <textarea id="prompt_output" rows="6" class="block w-full" readonly title="显示AI提示信息" placeholder="AI提示信息将显示在这里"></textarea>
+                </div>
+                <div class="border border-gray-600 p-2 mb-2 rounded-md">
+                    <h3 id="code_format" class="text-md font-bold mb-1">代码内容</h3>
+                    <div class="flex">
+                        <pre class="line-numbers" id="line_numbers"></pre>
+                        <textarea id="code_output" rows="6" class="block w-full" oninput="updateLineNumbers()" readonly title="显示AI返回的代码内容" placeholder="AI返回的代码内容将显示在这里"></textarea>
+                    </div>
+                    <button id="btn_toggle_edit" class="btn mt-2">
+                        <i class="fa-solid fa-pencil"></i>允许编辑代码
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // 新增变量控制自动执行状态
+        let isAutoExecuting = false;
+
+        // 获取所有需要控制的按钮
+        const buttons = [
+            'btn_send', 'btn_execute', 'btn_auto_execute', 'btn_save_operation_log',
+            'btn_send_result', 'btn_toggle_edit', 'btn_save_config',
+            'btn_clear_context', 'btn_save_context', 'btn_load_context', 'btn_get_files',
+            'btn_network_capture'
+        ];
+
+        // 禁用除暂停按钮外的所有按钮
+        function disableButtons() {
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn && btnId !== 'btn_pause_auto_execute') {
+                    btn.classList.add('disabled');
+                    btn.disabled = true;
+                }
+            });
+        }
+
+        // 启用所有按钮
+        function enableButtons() {
+            buttons.forEach(btnId => {
+                const btn = document.getElementById(btnId);
+                if (btn) {
+                    btn.classList.remove('disabled');
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        function updateLineNumbers() {
+            const codeOutput = document.getElementById('code_output');
+            const lineNumbers = document.getElementById('line_numbers');
+            const lines = codeOutput.value.split('\n').length;
+            let numbers = '';
+            for (let i = 1; i <= lines; i++) {
+                numbers += i + '\n';
+            }
+            lineNumbers.textContent = numbers;
+        }
+
+        function showLoading() {
+            const loadingProgress = document.getElementById('loading-progress');
+            const loadingProgressBar = document.getElementById('loading-progress-bar');
+            loadingProgress.style.display = 'block';
+            loadingProgressBar.style.width = '0%';
+            disableButtons(); // 显示加载进度条时禁用按钮
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(interval);
+                } else {
+                    progress += Math.random() * 10;
+                    if (progress > 100) progress = 100;
+                    loadingProgressBar.style.width = progress + '%';
+                }
+            }, 200);
+        }
+
+        function hideLoading() {
+            document.getElementById('loading-progress').style.display = 'none';
+            enableButtons(); // 隐藏加载进度条时启用按钮
+        }
+
+        // 模拟开机进度条
+        function simulateBoot() {
+            disableButtons(); // 显示开机进度条时禁用按钮
+            const bootProgress = document.getElementById('boot-progress');
+            const bootProgressBar = document.getElementById('boot-progress-bar');
+            let progress = 0;
+            const interval = setInterval(() => {
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    bootProgress.style.display = 'none';
+                    enableButtons(); // 开机完成后启用按钮
+                } else {
+                    progress += Math.random() * 10;
+                    if (progress > 100) progress = 100;
+                    bootProgressBar.style.width = progress + '%';
+                }
+            }, 200);
+        }
+
+        // 使用POST请求处理流式响应
+        async function sendRequest(endpoint, payload) {
+            showLoading();
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let result = '';
+                let lastData = null;
+                document.getElementById('prompt_output').value = "";
+                document.getElementById('code_output').value = "";
+                document.getElementById('code_format').textContent = "";
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    // 解码并追加当前块内容
+                    const chunk = decoder.decode(value, { stream: true });
+                    result += chunk;
+
+                    // 处理每一行JSON数据
+                    const lines = result.split('\n');
+                    for (let i = 0; i < lines.length - 1; i++) {
+                        const line = lines[i].trim();
+                        if (line) {
+                            try {
+                                const data = JSON.parse(line);
+                                if (data.success) {
+                                    document.getElementById('prompt_output').value += data.prompt;
+                                    document.getElementById('code_output').value += data.code;
+                                    document.getElementById('code_format').textContent = `${data.format}`;
+                                    updateLineNumbers();
+                                    lastData = data;
+                                } else {
+                                    alert(data.message);
+                                }
+                            } catch (e) {
+                                console.error('Failed to parse JSON:', e);
+                            }
+                        }
+                    }
+
+                    // 保留最后一行不完整的数据
+                    result = lines[lines.length - 1];
+
+                    // 添加微小延迟以确保UI有机会更新
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                }
+
+                hideLoading();
+                return lastData;
+            } catch (error) {
+                hideLoading();
+                console.error('Error:', error);
+                alert(`请求出错: ${error.message}`);
+                return null;
+            }
+        }
+
+        document.getElementById('btn_send').addEventListener('click', async () => {
+            const apiBase = document.getElementById('api_base').value;
+            const model = document.getElementById('model').value;
+            const userText = document.getElementById('user_input').value;
+
+            await sendRequest('/send_to_ai', {
+                api_base: apiBase,
+                model: model,
+                user_text: userText
+            });
+        });
+
+        document.getElementById('btn_execute').addEventListener('click', async () => {
+            if (!confirm('执行外部代码可能存在风险，是否继续？')) {
+                return;
+            }
+            showLoading();
+            const apiBase = document.getElementById('api_base').value;
+            const model = document.getElementById('model').value;
+            const codeText = document.getElementById('code_output').value;
+            let language = document.getElementById('code_format').textContent;
+            const languageInput = document.querySelector('input[name="language"]:checked');
+            if (languageInput) {
+                language = languageInput.value;
+            }
+
+            const response = await fetch('/execute_code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    api_base: apiBase,
+                    model: model,
+                    code_text: codeText,
+                    language: language
+                })
+            });
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            const execResult = document.getElementById('exec_result');
+            execResult.value = '';
+
+            // 使用异步迭代器处理流式响应
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                // 解码并追加当前块内容
+                const chunk = decoder.decode(value);
+                execResult.value += chunk;
+
+                // 滚动到底部
+                execResult.scrollTop = execResult.scrollHeight;
+
+                // 添加微小延迟以确保UI有机会更新
+                await new Promise(resolve => setTimeout(resolve, 10));
+            }
+
+            hideLoading();
+            alert('代码执行完成！');
+        });
+
+        document.getElementById('btn_send_result').addEventListener('click', async () => {
+            const apiBase = document.getElementById('api_base').value;
+            const model = document.getElementById('model').value;
+            const resultText = document.getElementById('exec_result').value;
+
+            await sendRequest('/send_result_to_ai', {
+                api_base: apiBase,
+                model: model,
+                result_text: resultText
+            });
+        });
+
+        document.getElementById('btn_toggle_edit').addEventListener('click', () => {
+            const codeOutput = document.getElementById('code_output');
+            const btn = document.getElementById('btn_toggle_edit');
+            if (codeOutput.readOnly) {
+                codeOutput.readOnly = false;
+                btn.textContent = '禁止编辑代码';
+                btn.innerHTML = '<i class="fa-solid fa-lock"></i>禁止编辑代码';
+            } else {
+                codeOutput.readOnly = true;
+                btn.textContent = '允许编辑代码';
+                btn.innerHTML = '<i class="fa-solid fa-pencil"></i>允许编辑代码';
+            }
+        });
+
+        document.getElementById('font_style_select').addEventListener('change', () => {
+            const fontStyle = document.getElementById('font_style_select').value;
+            const textAreas = document.querySelectorAll('textarea');
+            textAreas.forEach(textArea => {
+                textArea.style.fontFamily = fontStyle;
+            });
+        });
+
+        document.getElementById('btn_clear_context').addEventListener('click', async () => {
+            showLoading();
+            const apiBase = document.getElementById('api_base').value;
+            const model = document.getElementById('model').value;
+            const response = await fetch('/clear_messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    api_base: apiBase,
+                    model: model
+                })
+            });
+            const data = await response.json();
+            hideLoading();
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        });
+
+        document.getElementById('btn_save_context').addEventListener('click', async () => {
+            showLoading();
+            const apiBase = document.getElementById('api_base').value;
+            const model = document.getElementById('model').value;
+            const response = await fetch('/save_context', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    api_base: apiBase,
+                    model: model
+                })
+            });
+            const data = await response.json();
+            hideLoading();
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        });
+
+        document.getElementById('btn_load_context').addEventListener('click', async () => {
+            showLoading();
+            const apiBase = document.getElementById('api_base').value;
+            const model = document.getElementById('model').value;
+            const fileList = document.getElementById('file_list');
+            const selectedFile = fileList.options[fileList.selectedIndex];
+            if (!selectedFile) {
+                alert('请选择一个文件！');
+                hideLoading();
+                return;
+            }
+            const fileName = selectedFile.value;
+            const response = await fetch('/load_context', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    api_base: apiBase,
+                    model: model,
+                    file_name: fileName
+                })
+            });
+            const data = await response.json();
+            hideLoading();
+            if (data.success) {
+                alert(data.message);
+                // 重新发送请求以获取加载上下文后的响应
+                const userText = document.getElementById('user_input').value;
+                await sendRequest('/send_to_ai', {
+                    api_base: apiBase,
+                    model: model,
+                    user_text: userText
+                });
+            } else {
+                alert(data.message);
+            }
+        });
+
+        document.getElementById('btn_get_files').addEventListener('click', async () => {
+            showLoading();
+            const response = await fetch('/get_store_files', {
+                method: 'GET'
+            });
+            const data = await response.json();
+            hideLoading();
+            if (data.success) {
+                const fileList = document.getElementById('file_list');
+                fileList.innerHTML = '';
+                data.files.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file;
+                    option.textContent = file;
+                    fileList.appendChild(option);
+                });
+            } else {
+                alert(data.message);
+            }
+        });
+
+        // 新增自动执行函数，添加结束条件
+        async function autoExecuteLoop() {
+            if (!confirm('自动执行外部代码可能存在高风险，是否继续？')) {
+                return;
+            }
+            isAutoExecuting = true;
+
+            while (isAutoExecuting) {
+                try {
+                    // 执行代码
+                    showLoading();
+                    const apiBase = document.getElementById('api_base').value;
+                    const model = document.getElementById('model').value;
+                    const codeText = document.getElementById('code_output').value;
+                    let language = document.getElementById('code_format').textContent;
+                    const languageInput = document.querySelector('input[name="language"]:checked');
+                    if (languageInput) {
+                        language = languageInput.value;
+                    }
+                    const response = await fetch('/execute_code', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            api_base: apiBase,
+                            model: model,
+                            code_text: codeText,
+                            language: language
+                        })
+                    });
+
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    const execResult = document.getElementById('exec_result');
+                    execResult.value = '';
+
+                    // 使用异步迭代器处理流式响应
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        // 解码并追加当前块内容
+                        const chunk = decoder.decode(value);
+                        execResult.value += chunk;
+
+                        // 滚动到底部
+                        execResult.scrollTop = execResult.scrollHeight;
+
+                        // 添加微小延迟以确保UI有机会更新
+                        await new Promise(resolve => setTimeout(resolve, 10));
+                    }
+
+                    hideLoading();
+
+                    if (!isAutoExecuting) break; // 检查是否暂停
+
+                    // 发送执行结果
+                    const resultText = document.getElementById('exec_result').value;
+                    await sendRequest('/send_result_to_ai', {
+                        api_base: apiBase,
+                        model: model,
+                        result_text: resultText
+                    });
+
+                    const codeFormat = document.getElementById('code_format').textContent;
+                    const codeOutput = document.getElementById('code_output').value;
+                    if (codeFormat === '代码内容' || codeOutput === '') {
+                        isAutoExecuting = false;
+                        alert('代码执行结束或未获取到有效的代码内容！');
+                        break;
+                    }
+                } catch (error) {
+                    hideLoading();
+                    alert(`发生错误: ${error.message}`);
+                    isAutoExecuting = false;
+                }
+            }
+        }
+
+        // 为暂停按钮添加事件监听器
+        document.getElementById('btn_pause_auto_execute').addEventListener('click', async () => {
+            isAutoExecuting = false;
+            alert('已经暂停');
+        });
+
+        // 为自动执行按钮添加事件监听器
+        document.getElementById('btn_auto_execute').addEventListener('click', autoExecuteLoop);
+        document.getElementById('btn_save_operation_log').addEventListener('click', async () => {
+            try {
+                showLoading();
+                const response = await fetch('/save_operation_log_readable', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await response.json();
+                hideLoading();
+                if (data.success) {
+                    alert('操作日志保存成功！');
+                } else {
+                    alert('操作日志保存失败：' + data.message);
+                }
+            } catch (error) {
+                hideLoading();
+                alert('发生错误：' + error.message);
+            }
+        });
+
+        // 保存配置的事件监听器
+        document.getElementById('btn_save_config').addEventListener('click', async () => {
+            const apiBase = document.getElementById('api_base').value;
+            const model = document.getElementById('model').value;
+            const response = await fetch('/save_config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    api_base: apiBase,
+                    model: model
+                })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert(data.message);
+            } else {
+                alert(data.message);
+            }
+        });
+
+        // 跳转到网络接口和数据包捕获页面
+        document.getElementById('btn_network_capture').addEventListener('click', () => {
+            window.location.href = '/network_capture';
+        });
+
+        // 页面加载完成后模拟开机进度条
+        window.onload = simulateBoot;
+    </script>
+</body>
+
+</html>
