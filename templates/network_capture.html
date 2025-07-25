@@ -10,11 +10,10 @@
     <style>
         /* 黑客风格背景动画 */
         body {
-            color: #0f0;
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(45deg, #000 0%, #001 25%, #010 50%, #001 75%, #000 100%);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            color: #333333;
+            font-family: 'Microsoft YaHei', 'Source Han Sans CN', sans-serif;
+            background-color: #FFFFFF;
+            line-height: 1.6;
         }
 
         @keyframes gradient {
@@ -31,15 +30,14 @@
 
         /* 按钮样式 */
         .btn {
-            background: linear-gradient(45deg, #0f0, #0ff);
-            color: #000;
+            background: linear-gradient(to right, #1976D2, #0D47A1);
+            color: #FFFFFF;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
             border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-weight: bold;
             display: inline-flex;
             align-items: center;
@@ -56,18 +54,17 @@
 
         /* 文本框样式 */
         textarea {
-            background: rgba(0, 0, 0, 0.7);
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: #FFFFFF;
+            color: #333333;
+            border: 1px solid #BBDEFB;
             padding: 10px;
             border-radius: 5px;
             resize: none;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-            font-family: 'Courier New', monospace;
+            box-shadow: none;
+            font-family: 'Microsoft YaHei', sans-serif;
             font-size: 14px;
             line-height: 1.5;
             transition: border-color 0.3s;
-            animation: flicker 1.5s infinite alternate;
         }
 
         @keyframes flicker {
@@ -82,35 +79,36 @@
         }
 
         textarea:focus {
-            border-color: #0ff;
+            border-color: #1976D2;
             outline: none;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+        }
+        input[type="text"] {
+            background-color: #FFFFFF;
+            border: 1px solid #BBDEFB;
+            color: #333333;
+            padding: 10px;
+            border-radius: 5px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #1976D2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
         }
 
         /* 卡片样式 */
         .card {
-            background: rgba(0, 0, 0, 0.7);
+            background: #FFFFFF;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-            border: 2px solid #0f0;
-            transition: box-shadow 0.3s, border-color 0.3s;
-            animation: card-flicker 2s infinite alternate;
-        }
-
-        @keyframes card-flicker {
-            0% {
-                border-color: #0f0;
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-            }
-            100% {
-                border-color: #0ff;
-                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
-            }
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #E0E0E0;
+            transition: box-shadow 0.3s;
         }
 
         .card:hover {
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
-            border-color: #0ff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
 
         /* DDoS指示灯样式 */
@@ -118,21 +116,21 @@
             transition: background-color 0.5s ease;
         }
         .status-safe {
-            background-color: #0f0 !important;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            background-color: #1976D2 !important;
+            box-shadow: 0 0 15px rgba(25, 118, 210, 0.3);
         }
         .status-warning {
-            background-color: #ff0 !important;
-            box-shadow: 0 0 15px rgba(255, 255, 0, 0.8);
+            background-color: #0D47A1 !important;
+            box-shadow: 0 0 15px rgba(13, 71, 161, 0.5);
         }
 
         /* 标题样式 */
         h1,
         h2,
         h3 {
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-            color: #0f0;
-            animation: title-flicker 1.5s infinite alternate;
+            color: #0D47A1;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
         @keyframes title-flicker {
@@ -155,56 +153,45 @@
             transform: translate(-50%, -50%);
             width: 80%;
             max-width: 600px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #0f0;
+            background: #FFFFFF;
+            color: #333333;
             padding: 20px;
             border-radius: 10px;
             z-index: 1000;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            animation: loading-pulse 1s infinite;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E0E0E0;
         }
 
         .loading-progress-bar {
             height: 20px;
-            background: #0f0;
+            background: linear-gradient(to right, #1976D2, #0D47A1);
             width: 0%;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
         }
 
-        @keyframes loading-pulse {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.05);
-                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            }
-        }
+        /* 移除加载动画，保持静态样式 */
 
         /* 网络接口选择样式 */
         .interface-card {
             margin: 10px 0;
             padding: 10px;
-            border: 1px solid #0f0;
+            border: 1px solid #BBDEFB;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
+            background-color: #F5F5F5;
         }
 
         .interface-card:hover {
-            background: rgba(0, 255, 0, 0.2);
+            background: #E3F2FD;
             transform: translateY(-2px);
+            border-color: #1976D2;
         }
 
         .interface-card.selected {
-            background: rgba(0, 255, 255, 0.3);
-            border-color: #0ff;
+            background: #E3F2FD;
+            border-color: #1976D2;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
@@ -219,7 +206,7 @@
 
     <!-- DDOS攻击数据包弹窗 -->
     <div id="ddos_modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
-      <div class="bg-black border-2 border-green-500 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+      <div class="bg-white border border-gray-200 rounded-lg p-6 max-w-4xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-md">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-xl font-bold">DDOS攻击检测</h3>
           <button id="close_ddos_modal" class="text-green-500 hover:text-green-400" title="关闭DDOS攻击检测弹窗">
@@ -228,21 +215,21 @@
         </div>
         <div class="overflow-y-auto flex-grow">
           <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-green-500">
+            <table class="w-full border-collapse border border-E0E0E0 bg-white">
               <thead>
-                <tr class="bg-black text-green-500">
-                  <th class="p-2 border border-green-500">时间戳</th>
-                  <th class="p-2 border border-green-500">模型</th>
-                  <th class="p-2 border border-green-500">时间戳密度</th>
-                  <th class="p-2 border border-green-500">流量速率</th>
-                  <th class="p-2 border border-green-500">重复率</th>
-                  <th class="p-2 border border-green-500">源IP多样性</th>
-                  <th class="p-2 border border-green-500">流对密度</th>
-                  <th class="p-2 border border-green-500">时间间隔波动性</th>
-                  <th class="p-2 border border-green-500">预测结果</th>
+                <tr style="background-color: #E3F2FD; color: #0D47A1;">
+                  <th class="p-2 border border-gray-200">时间戳</th>
+                  <th class="p-2 border border-gray-200">模型</th>
+                  <th class="p-2 border border-gray-200">时间戳密度</th>
+                  <th class="p-2 border border-gray-200">流量速率</th>
+                  <th class="p-2 border border-gray-200">重复率</th>
+                  <th class="p-2 border border-gray-200">源IP多样性</th>
+                  <th class="p-2 border border-gray-200">流对密度</th>
+                  <th class="p-2 border border-gray-200">时间间隔波动性</th>
+                  <th class="p-2 border border-gray-200">预测结果</th>
                 </tr>
               </thead>
-              <tbody id="model_predictions_table_body" class="text-green-400">
+              <tbody id="model_predictions_table_body" class="text-333333">
               </tbody>
             </table>
           </div>
@@ -263,17 +250,17 @@
         predictions.forEach(pred => {
           const row = document.createElement('tr');
           // 根据所有预测是否为1设置行颜色
-          row.className = allOnes ? 'bg-red-900 bg-opacity-30' : 'bg-green-900 bg-opacity-30';
+          row.className = allOnes ? 'bg-red-50 border border-red-200' : 'bg-green-50 border border-green-200';
           row.innerHTML = `
-            <td class="p-2 border border-green-500">${pred.timestamp}</td>
-            <td class="p-2 border border-green-500">${pred.model}</td>
-            <td class="p-2 border border-green-500">${pred.features.timestamp_density.toFixed(4)}</td>
-            <td class="p-2 border border-green-500">${pred.features.traffic_rate.toFixed(2)}</td>
-            <td class="p-2 border border-green-500">${pred.features.duplicate_ratio.toFixed(4)}</td>
-            <td class="p-2 border border-green-500">${pred.features.src_ip_diversity.toFixed(4)}</td>
-            <td class="p-2 border border-green-500">${pred.features.flow_pair_density.toFixed(4)}</td>
-            <td class="p-2 border border-green-500">${pred.features.time_delta_std.toFixed(6)}</td>
-            <td class="p-2 border border-green-500">${pred.prediction}</td>
+            <td class="p-2 border border-gray-200">${pred.timestamp}</td>
+            <td class="p-2 border border-gray-200">${pred.model}</td>
+            <td class="p-2 border border-gray-200">${pred.features.timestamp_density.toFixed(4)}</td>
+            <td class="p-2 border border-gray-200">${pred.features.traffic_rate.toFixed(2)}</td>
+            <td class="p-2 border border-gray-200">${pred.features.duplicate_ratio.toFixed(4)}</td>
+            <td class="p-2 border border-gray-200">${pred.features.src_ip_diversity.toFixed(4)}</td>
+            <td class="p-2 border border-gray-200">${pred.features.flow_pair_density.toFixed(4)}</td>
+            <td class="p-2 border border-gray-200">${pred.features.time_delta_std.toFixed(6)}</td>
+            <td class="p-2 border border-gray-200">${pred.prediction}</td>
           `;
           tableBody.appendChild(row);
         });
@@ -296,15 +283,15 @@
         </div>
         <div class="overflow-y-auto flex-grow">
           <div class="overflow-x-auto">
-            <table class="w-full border-collapse border border-green-500">
+            <table class="w-full border-collapse border border-gray-200">
               <thead>
-                <tr class="bg-black text-green-500">
-                  <th class="p-2 border border-green-500">协议</th>
-                  <th class="p-2 border border-green-500">源IP</th>
-                  <th class="p-2 border border-green-500">目的IP</th>
-                  <th class="p-2 border border-green-500">时间</th>
-                  <th class="p-2 border border-green-500">大小</th>
-                  <th class="p-2 border border-green-500">状态</th>
+                <tr style="background-color: #E3F2FD; color: #0D47A1;">
+                  <th class="p-2 border border-gray-200">协议</th>
+                  <th class="p-2 border border-gray-200">源IP</th>
+                  <th class="p-2 border border-gray-200">目的IP</th>
+                  <th class="p-2 border border-gray-200">时间</th>
+                  <th class="p-2 border border-gray-200">大小</th>
+                  <th class="p-2 border border-gray-200">状态</th>
                 </tr>
               </thead>
               <tbody id="ddos_packet_table_body" class="text-green-400">
@@ -333,7 +320,7 @@
         indicator.classList.add('bg-red-500');
       } else {
         indicator.classList.remove('bg-red-500');
-        indicator.classList.add('bg-green-500');
+        indicator.classList.add('bg-#4CAF50');
       }
     } catch (error) {
       console.error('Failed to check attack status:', error);
@@ -346,7 +333,7 @@
         <div class="w-1/2">
             <div class="card mb-4">
                 <h2 class="text-xl font-bold mb-2">网络接口选择</h2>
-                <select id="interface_select" class="w-full bg-black border-2 border-green-500 text-green-500 p-2 rounded mb-4" title="选择网络接口">
+                <select id="interface_select" class="w-full bg-white border border-gray-200 text-gray-800 p-2 rounded mb-4 focus:border-#1976D2 focus:outline-none focus:ring-1 focus:ring-#1976D2" title="选择网络接口">
                     <option value="">请选择网络接口...</option>
                 </select>
                 <div id="network_interfaces" class="mb-2">
@@ -356,7 +343,7 @@
                     <button id="btn_start_capture" class="btn">
                         <i class="fa-solid fa-play"></i>开始捕获数据包
                     </button>
-                    <input type="text" id="filter_input" class="bg-black border-2 border-green-500 text-green-500 p-2 rounded w-64 ml-2" placeholder="筛选字符串（支持多条件逗号分隔，如sport:80,dport:443,tcp）">
+                    <input type="text" id="filter_input" class="bg-white border border-blue-100 text-gray-800 p-2 rounded w-64 ml-2 focus:border-#1976D2 focus:outline-none focus:ring-1 focus:ring-#1976D2" placeholder="筛选字符串（支持多条件逗号分隔，如sport:80,dport:443,tcp）">
                     <button id="btn_stop_capture" class="btn">
                         <i class="fa-solid fa-stop"></i>停止捕获数据包
                     </button>
@@ -370,14 +357,14 @@
             <div class="card mb-4">
                 <h2 class="text-xl font-bold mb-2">捕获的数据包</h2>
                 <div class="overflow-x-auto">
-                    <table class="w-full border-collapse border border-green-500">
+                    <table class="w-full border-collapse border border-gray-200">
                         <thead>
-                            <tr class="bg-black text-green-500">
-                                <th class="p-2 border border-green-500">协议</th>
-                                <th class="p-2 border border-green-500">源IP</th>
-                                <th class="p-2 border border-green-500">目的IP</th>
-                                <th class="p-2 border border-green-500">时间</th>
-                                <th class="p-2 border border-green-500">大小</th>
+                            <tr style="background-color: #E3F2FD; color: #0D47A1;">
+                                <th class="p-2 border border-gray-200">协议</th>
+                                <th class="p-2 border border-gray-200">源IP</th>
+                                <th class="p-2 border border-gray-200">目的IP</th>
+                                <th class="p-2 border border-gray-200">时间</th>
+                                <th class="p-2 border border-gray-200">大小</th>
                             </tr>
                         </thead>
                         <tbody id="packet_table_body" class="text-green-400">
@@ -387,14 +374,14 @@
                 
                 <!-- 弹窗 -->
                 <div id="packet_modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4">
-                    <div class="bg-black border-2 border-green-500 rounded-lg p-6 max-w-2xl w-full">
+                    <div class="bg-white border-2 border-gray-200 rounded-lg p-6 max-w-2xl w-full">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-xl font-bold">数据包详情</h3>
-                            <button id="close_modal" class="text-green-500 hover:text-green-400" title="关闭数据包详情弹窗">
+                            <button id="close_modal" style="color: #1976D2;" onmouseover="this.style.color='#0D47A1'" onmouseout="this.style.color='#1976D2'" title="关闭数据包详情弹窗">
                                 <i class="fa-solid fa-times"></i>
                             </button>
                         </div>
-                        <pre id="packet_details" class="overflow-auto max-h-96 text-green-400"></pre>
+                        <pre id="packet_details" class="overflow-auto max-h-96 text-#333333"></pre>
                     </div>
                 </div>
 

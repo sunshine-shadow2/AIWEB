@@ -10,36 +10,24 @@
     <style>
         /* 黑客风格背景动画 */
         body {
-            color: #0f0;
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(45deg, #000 0%, #001 25%, #010 50%, #001 75%, #000 100%);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
+            color: #333333;
+            font-family: 'Microsoft YaHei', 'Source Han Sans CN', sans-serif;
+            background-color: #FFFFFF;
+            line-height: 1.6;
         }
 
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
+        /* 移除背景动画 */
 
         /* 按钮样式 */
         .btn {
-            background: linear-gradient(45deg, #0f0, #0ff);
-            color: #000;
+            background: linear-gradient(to right, #1976D2, #0D47A1);
+            color: #FFFFFF;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
             border-radius: 5px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             font-weight: bold;
             display: inline-flex;
             align-items: center;
@@ -56,30 +44,20 @@
 
         /* 文本框样式 */
         textarea {
-            background: rgba(0, 0, 0, 0.7);
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: #FFFFFF;
+            color: #333333;
+            border: 1px solid #BBDEFB;
             padding: 10px;
             border-radius: 5px;
             resize: none;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-            font-family: 'Courier New', monospace;
+            box-shadow: none;
+            font-family: 'Microsoft YaHei', sans-serif;
             font-size: 14px;
             line-height: 1.5;
             transition: border-color 0.3s;
-            animation: flicker 1.5s infinite alternate;
         }
 
-        @keyframes flicker {
-            0% {
-                border-color: #0f0;
-                box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
-            }
-            100% {
-                border-color: #0ff;
-                box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
-            }
-        }
+        /* 移除边框闪烁动画 */
 
         textarea:focus {
             border-color: #0ff;
@@ -88,27 +66,26 @@
 
         /* 行号样式 */
         .line-numbers {
-            background: rgba(0, 0, 0, 0.7);
-            color: #888;
+            background: #F5F5F5;
+            color: #666666;
             width: 30px;
             text-align: right;
             padding-right: 5px;
             border-radius: 5px 0 0 5px;
-            border: 2px solid #0f0;
+            border: 1px solid #E0E0E0;
             border-right: none;
-            font-family: 'Courier New', monospace;
+            font-family: 'Microsoft YaHei', sans-serif;
             font-size: 14px;
         }
 
         /* 卡片样式 */
         .card {
-            background: rgba(0, 0, 0, 0.7);
+            background: #FFFFFF;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-            border: 2px solid #0f0;
-            transition: box-shadow 0.3s, border-color 0.3s;
-            animation: card-flicker 2s infinite alternate;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #E0E0E0;
+            transition: box-shadow 0.3s;
         }
 
         @keyframes card-flicker {
@@ -131,9 +108,9 @@
         h1,
         h2,
         h3 {
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
-            color: #0f0;
-            animation: title-flicker 1.5s infinite alternate;
+            color: #0D47A1;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
         @keyframes title-flicker {
@@ -155,21 +132,20 @@
             transform: translate(-50%, -50%);
             width: 80%;
             max-width: 600px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #0f0;
+            background: #FFFFFF;
+            color: #333333;
             padding: 20px;
             border-radius: 10px;
             z-index: 1000;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            animation: loading-pulse 1s infinite;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E0E0E0;
         }
 
         .boot-progress-bar {
             height: 20px;
-            background: #0f0;
+            background: linear-gradient(to right, #1976D2, #0D47A1);
             width: 0%;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
         }
 
         /* 加载进度条样式 */
@@ -181,43 +157,29 @@
             transform: translate(-50%, -50%);
             width: 80%;
             max-width: 600px;
-            background: rgba(0, 0, 0, 0.9);
-            color: #0f0;
+            background: #FFFFFF;
+            color: #333333;
             padding: 20px;
             border-radius: 10px;
             z-index: 1000;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            animation: loading-pulse 1s infinite;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #E0E0E0;
         }
 
         .loading-progress-bar {
             height: 20px;
-            background: #0f0;
+            background: linear-gradient(to right, #1976D2, #0D47A1);
             width: 0%;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.8);
         }
 
-        @keyframes loading-pulse {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.05);
-                box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
-            }
-        }
+        /* 移除加载动画 */
 
         /* 网络接口选择样式 */
         .interface-card {
             margin: 10px 0;
             padding: 10px;
-            border: 1px solid #0f0;
+            border: 1px solid #BBDEFB;
             border-radius: 5px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -229,8 +191,49 @@
         }
 
         .interface-card.selected {
-            background: rgba(0, 255, 255, 0.3);
-            border-color: #0ff;
+            background: #E3F2FD;
+            border-color: #1976D2;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        /* 表格样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            color: #333333;
+            background-color: #FFFFFF;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #E0E0E0;
+        }
+
+        th {
+            background-color: #E3F2FD;
+            color: #0D47A1;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #F5F5F5;
+        }
+
+        /* 模态框样式 */
+        .modal-content {
+            background-color: #FFFFFF;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #E0E0E0;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            color: #333333;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
@@ -291,7 +294,7 @@
             </div>
             <div class="card mb-4">
                 <h2 class="text-xl font-bold mb-2">字体样式选择</h2>
-                <select id="font_style_select" class="block w-full rounded-md" title="选择字体样式">
+                <select id="font_style_select" class="block w-full rounded-md border border-#BBDEFB p-2 focus:border-#1976D2 focus:outline-none focus:ring-1 focus:ring-#1976D2" title="选择字体样式">
                     <option value="'Courier New', monospace">Courier New</option>
                     <option value="'Roboto', sans-serif">Roboto</option>
                     <option value="Arial, sans-serif">Arial</option>
@@ -300,7 +303,7 @@
             </div>
             <div class="card mb-4">
                 <h2 class="text-xl font-bold mb-2">文件列表</h2>
-                <select id="file_list" class="block w-full rounded-md" multiple title="文件列表选择框"></select>
+                <select id="file_list" class="block w-full rounded-md border border-gray-200 p-2" multiple title="文件列表选择框"></select>
             </div>
             <div class="flex space-x-2 mb-4">
                 <button id="btn_clear_context" class="btn">
