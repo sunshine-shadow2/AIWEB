@@ -4,7 +4,7 @@ import os
 import openai
 import numpy as np
 import pandas as pd
-from jiqi import detect_ddos_decision_tree
+from duotoujiqi1 import detect_ddos_decision_tree
 from interpreter import interpreter
 from unittest.mock import patch
 from interpreter.core.computer.computer import Computer
